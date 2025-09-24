@@ -7,21 +7,27 @@ def test_calc_grade():
     assert gb.calc_grade(200, gb.default_boundaries) == 'B'
 
 test_data = [
-    (0, 'U'),
-    (240, 'A'),
-    (200, 'B')
+    (x, y)
+    for x, y in gb.default_boundaries.items()
+    if y is not 'Max'
 ]
 
-@pytest.mark.parametrize("grade, expected", test_data)
-def test_calc_grade_lots(grade, expected):
-    assert gb.calc_grade(grade, gb.default_boundaries) == expected
+@pytest.mark.parametrize("mark, expected", test_data)
+def test_calc_grade_lots(mark, expected):
+    assert gb.calc_grade(mark, gb.default_boundaries) == expected
 
-def test_calc_grade_boundary():
-    with pytest.raises(ValueError):
-        gb.calc_grade(400, gb.default_boundaries)
 
+erroneous_data = [
+    -100,
+    -1,
+    351,
+    400,
+]
+@pytest.mark.parametrize("mark", erroneous_data)
+def test_calc_grade_erroneous(mark):
     with pytest.raises(ValueError):
-        gb.calc_grade(-1, gb.default_boundaries)
+        gb.calc_grade(mark, gb.default_boundaries)
+
 
 def test_calc_grade_type():
     with pytest.raises(TypeError):
